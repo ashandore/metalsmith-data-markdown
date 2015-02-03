@@ -43,12 +43,17 @@ function plugin(options) {
       // parse html content in cheerio to query it
       var $ = cheerio.load(data.contents.toString());
 
-      $("[data-markdown]").each(function(index) {
+      $("html").children().each(function process(index) {
+        $(this).children().each(process);
+
+        if($(this).attr("data-markdown") == null) return;
+
         
         // grab the html of the node and 
         // decode all html entities (as marked doesn't have to know about them)
         // decoding fixes problems with smartypants
         var markedText = marked(he.decode($(this).html()));
+
 
         // set compiled markdown content to node
         $(this).html(markedText);
